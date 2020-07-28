@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:skype_clone/models/message.dart';
 import 'package:skype_clone/models/user.dart';
 import 'package:skype_clone/utils/utils.dart';
 
@@ -14,6 +15,19 @@ class FirebaseService {
     FirebaseUser currentUser;
     currentUser = await _auth.currentUser();
     return currentUser;
+  }
+
+  Future<List<User>> fetchAllUsers(FirebaseUser currentUser) async {
+    List<User> userList = List<User>();
+
+    QuerySnapshot querySnapshot =
+        await firestore.collection("users").getDocuments();
+    for (var i = 0; i < querySnapshot.documents.length; i++) {
+      if (querySnapshot.documents[i].documentID != currentUser.uid) {
+        userList.add(User.fromJson(querySnapshot.documents[i].data));
+      }
+    }
+    return userList;
   }
 
   Future<FirebaseUser> signIn() async {
@@ -34,7 +48,7 @@ class FirebaseService {
   Future<bool> authenticateUser(FirebaseUser user) async {
     QuerySnapshot result = await firestore
         .collection("users")
-        .where("name", isEqualTo: user.email)
+        .where("email", isEqualTo: user.email)
         .getDocuments();
 
     final List<DocumentSnapshot> docs = result.documents;
@@ -45,6 +59,9 @@ class FirebaseService {
   Future<void> register(FirebaseUser currentUser) async {
     String username = Utils.getUsername(currentUser.email);
 
+    print("This is my uid: ${currentUser.uid}");
+    print("This is my pid: ${currentUser.providerId}");
+
     user = User(
         uid: currentUser.uid,
         email: currentUser.email,
@@ -52,12 +69,31 @@ class FirebaseService {
         profilePhoto: currentUser.photoUrl,
         username: username);
 
-    firestore.collection("users").document().setData(user.toJson());
+    firestore
+        .collection("users")
+        .document(currentUser.uid)
+        .setData(user.toJson());
   }
 
   Future<void> signOut() async {
     await _googleSignIn.disconnect();
     await _googleSignIn.signOut();
     return await _auth.signOut();
+  }
+
+  Future<void> sendMessage(Message message, User sender, User receive) async {
+    var map = message.toJson();
+
+    await firestore
+        .collection("messages")
+        .document(message.senderId)
+        .collection(message.receiverId)
+        .add(map);
+
+    return await firestore
+        .collection("messages")
+        .document(message.receiverId)
+        .collection(message.senderId)
+        .add(map);
   }
 }

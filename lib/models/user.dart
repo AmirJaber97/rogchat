@@ -4,7 +4,7 @@ class User {
   String email;
   String username;
   String status;
-  int state;
+  String state;
   String profilePhoto;
 
   User(

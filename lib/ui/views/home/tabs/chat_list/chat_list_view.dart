@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:skype_clone/constants/app_routes.dart';
 import 'package:skype_clone/ui/views/home/tabs/chat_list/components/custom_app_bar.dart';
 import 'package:skype_clone/ui/views/home/tabs/chat_list/components/custom_tile.dart';
 
 import '../../../../../app/locator.dart';
-import '../../../../../constants/app_colors.dart';
-import '../../../../../constants/app_colors.dart';
 import '../../../../../constants/app_colors.dart';
 import '../../../../../services/firebase_service.dart';
 import '../../../../../utils/utils.dart';
@@ -22,7 +22,6 @@ class _ChatListViewState extends State<ChatListView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _firebaseService.getCurrentUser().then((user) {
       setState(() {
@@ -49,7 +48,9 @@ class _ChatListViewState extends State<ChatListView> {
             Icons.search,
             color: kWhiteColor,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Get.toNamed(RoutePaths.Search);
+          },
         )
       ],
     );
@@ -82,7 +83,7 @@ class UserCircle extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Text(
-              text,
+              text ?? '',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: lightBlueColor,
@@ -148,8 +149,14 @@ class _ChatListContainerState extends State<ChatListContainer> {
           return CustomTile(
             mini: false,
             onTap: () {},
-            title: Text("Test"),
-            subtitle: Text("Test"),
+            title: Text(
+              "Test",
+              style: TextStyle(color: kWhiteColor, fontSize: 19.0),
+            ),
+            subtitle: Text(
+              "Test",
+              style: TextStyle(color: greyColor, fontSize: 14.0),
+            ),
             leading: Container(
               constraints: BoxConstraints(maxHeight: 60, maxWidth: 60),
               child: Stack(
@@ -160,19 +167,20 @@ class _ChatListContainerState extends State<ChatListContainer> {
                     backgroundImage: NetworkImage(
                         "https://i.picsum.photos/id/807/200/300.jpg?hmac=9ZZk1Nj28qIecGuVvozSN7I4LW0zotTPqeYfdGR3YdE"),
                   ),
-                  Align(alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 30.0,
-                    width: 30.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: onlineDotColor,
-                      border: Border.all(
-                        color: kBlackColor,
-                        width: 2,
-                      )
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      height: 13.0,
+                      width: 13.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: onlineDotColor,
+                          border: Border.all(
+                            color: kBlackColor,
+                            width: 2,
+                          )),
                     ),
-                  ),),
+                  ),
                 ],
               ),
             ),
