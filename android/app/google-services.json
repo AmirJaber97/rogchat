@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "515954066390-e24o53sh59g4g8clj57e9efave9omlvm.apps.googleusercontent.com",
+          "client_id": "515954066390-icapcmiklvsdjm2qknvtn8osavbjejmk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.ajhosts.skype_clone",
-            "certificate_hash": "c5e80656bf56f268adc8c66d9ddb7b8b519c76cd"
+            "certificate_hash": "eb74fc0879eb6c41aeed624b7e66d84630a98994"
           }
         },
         {

@@ -39,14 +39,14 @@ class LoginViewModel extends BaseModel {
   }
 
   Future<void> register(FirebaseUser currentUser) async {
-    setNotifier(NotifierState.Loading);
+     setNotifier(NotifierState.Loading);
     await _firebaseService.register(currentUser);
     setNotifier(NotifierState.Loaded);
   }
 
   Future<void> signOut() async {
-    setNotifier(NotifierState.Loading);
+//    setNotifier(NotifierState.Loading);
     await _firebaseService.signOut().then((value) => Get.offAndToNamed(RoutePaths.Login));
-    setNotifier(NotifierState.Loaded);
+//    setNotifier(NotifierState.Loaded);
   }
 }

@@ -9,9 +9,9 @@ import 'package:skype_clone/app/locator.dart';
 import 'package:skype_clone/caches/preferences.dart';
 import 'package:skype_clone/enums/notifier_state.dart';
 import 'package:skype_clone/ui/setup/routes.dart';
-import 'package:skype_clone/ui/views/home_view.dart';
-import 'package:skype_clone/ui/views/login_view.dart';
-import 'package:skype_clone/ui/views/login_viewmodel.dart';
+import 'package:skype_clone/ui/views/home/home_view.dart';
+import 'package:skype_clone/ui/views/login/login_view.dart';
+import 'package:skype_clone/ui/views/login/login_viewmodel.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
