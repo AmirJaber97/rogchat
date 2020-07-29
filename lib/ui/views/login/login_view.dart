@@ -55,9 +55,10 @@ class _LoginViewState extends State<LoginView> {
   void performLogin(LoginViewModel model) {
     model.signIn().then((user) {
       if (user != null) {
+        print("User is not null, authenticating...");
         authenticateUser(model, user);
       } else {
-        print("DICK");
+        print("Failed to sign in");
       }
     });
   }
@@ -65,9 +66,12 @@ class _LoginViewState extends State<LoginView> {
   void authenticateUser(LoginViewModel model, FirebaseUser user) {
     model.authenticateUser(user).then((isNewUser) {
       if (isNewUser) {
+
         model.register(user).then((value) {
           Get.offAndToNamed(RoutePaths.Home);
         });
+      } else {
+        Get.offAndToNamed(RoutePaths.Home);
       }
     });
   }

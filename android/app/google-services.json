@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "515954066390-mqltmph88heooo2cionga4j1ul84n4p1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ajhosts.rogchat",
+            "certificate_hash": "c5e80656bf56f268adc8c66d9ddb7b8b519c76cd"
+          }
+        },
+        {
           "client_id": "515954066390-mnk1eldf6280dhf7a1vchvob7ncft506.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

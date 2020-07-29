@@ -276,7 +276,7 @@ class _ChatViewState extends State<ChatView> {
                         title: "Media",
                         subtitle: "Share Photos and Video",
                         icon: Icons.image,
-//                        onTap: Utils.pickImage(source: ),
+                        onTap:() => Utils.pickImage(source: ImageSource.gallery),
                       ),
                       ModalTile(
                           title: "File",
