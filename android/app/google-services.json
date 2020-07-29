@@ -8,25 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:515954066390:android:0286accb7bc785f9c91a77",
+        "mobilesdk_app_id": "1:515954066390:android:427e87147dd4f11cc91a77",
         "android_client_info": {
-          "package_name": "com.ajhosts.skype_clone"
+          "package_name": "com.ajhosts.rogchat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "515954066390-448m81ha0g1rlhl4a1to313jkse8ih8j.apps.googleusercontent.com",
+          "client_id": "515954066390-mnk1eldf6280dhf7a1vchvob7ncft506.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.ajhosts.skype_clone",
-            "certificate_hash": "c5e80656bf56f268adc8c66d9ddb7b8b519c76cd"
-          }
-        },
-        {
-          "client_id": "515954066390-icapcmiklvsdjm2qknvtn8osavbjejmk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ajhosts.skype_clone",
+            "package_name": "com.ajhosts.rogchat",
             "certificate_hash": "eb74fc0879eb6c41aeed624b7e66d84630a98994"
           }
         },

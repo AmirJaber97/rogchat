@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:skype_clone/constants/app_routes.dart';
-import 'package:skype_clone/ui/views/home/tabs/chat_list/components/custom_app_bar.dart';
-import 'package:skype_clone/ui/views/home/tabs/chat_list/components/custom_tile.dart';
+import 'package:rogchat/constants/app_routes.dart';
+import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_app_bar.dart';
+import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_tile.dart';
 
 import '../../../../../app/locator.dart';
 import '../../../../../constants/app_colors.dart';

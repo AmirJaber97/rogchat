@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:skype_clone/app/locator.dart';
-import 'package:skype_clone/constants/app_routes.dart';
-import 'package:skype_clone/enums/notifier_state.dart';
-import 'package:skype_clone/services/firebase_service.dart';
-import 'package:skype_clone/ui/setup/app_base_model.dart';
+import 'package:rogchat/app/locator.dart';
+import 'package:rogchat/constants/app_routes.dart';
+import 'package:rogchat/enums/notifier_state.dart';
+import 'package:rogchat/services/firebase_service.dart';
+import 'package:rogchat/ui/setup/app_base_model.dart';
 
 class LoginViewModel extends BaseModel {
   final FirebaseService _firebaseService = locator<FirebaseService>();

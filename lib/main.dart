@@ -5,13 +5,14 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:skype_clone/app/locator.dart';
-import 'package:skype_clone/caches/preferences.dart';
-import 'package:skype_clone/enums/notifier_state.dart';
-import 'package:skype_clone/ui/setup/routes.dart';
-import 'package:skype_clone/ui/views/home/home_view.dart';
-import 'package:skype_clone/ui/views/login/login_view.dart';
-import 'package:skype_clone/ui/views/login/login_viewmodel.dart';
+import 'package:rogchat/app/locator.dart';
+import 'package:rogchat/caches/preferences.dart';
+import 'package:rogchat/enums/notifier_state.dart';
+import 'package:rogchat/providers/imageUploadProvider.dart';
+import 'package:rogchat/ui/setup/routes.dart';
+import 'package:rogchat/ui/views/home/home_view.dart';
+import 'package:rogchat/ui/views/login/login_view.dart';
+import 'package:rogchat/ui/views/login/login_viewmodel.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,22 +25,29 @@ Future<void> main() async {
   await locator<Preferences>().openBox();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(SkypeClone());
+  runApp(RogChat());
 }
 
-class SkypeClone extends StatefulWidget {
+class RogChat extends StatefulWidget {
   @override
-  _SkypeCloneState createState() => _SkypeCloneState();
+  _RogChatState createState() => _RogChatState();
 }
 
-class _SkypeCloneState extends State<SkypeClone> {
+class _RogChatState extends State<RogChat> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<LoginViewModel>(
-      create: (context) => LoginViewModel(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LoginViewModel>(
+          create: (context) => LoginViewModel(),
+        ),
+        ChangeNotifierProvider<ImageUploadProvider>(
+          create: (context) => ImageUploadProvider(),
+        ),
+      ],
       child: GetMaterialApp(
         onGenerateRoute: Routes.generateRoute,
-        title: "Skype Clone",
+        title: "RogChat",
         debugShowCheckedModeBanner: false,
         home: Consumer<LoginViewModel>(
           builder: (context, LoginViewModel model, widget) {

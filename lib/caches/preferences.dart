@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:skype_clone/app/logger.dart';
+import 'package:rogchat/app/logger.dart';
 
 class Preferences {
   var logger = getLogger("Preferences");

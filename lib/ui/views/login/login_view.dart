@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skype_clone/constants/app_colors.dart';
-import 'package:skype_clone/constants/app_routes.dart';
-import 'package:skype_clone/enums/notifier_state.dart';
-import 'package:skype_clone/ui/views/login/login_viewmodel.dart';
+import 'package:rogchat/constants/app_colors.dart';
+import 'package:rogchat/constants/app_routes.dart';
+import 'package:rogchat/enums/notifier_state.dart';
+import 'package:rogchat/ui/views/login/login_viewmodel.dart';
 
 class LoginView extends StatefulWidget {
   @override

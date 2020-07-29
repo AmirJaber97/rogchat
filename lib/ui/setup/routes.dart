@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skype_clone/app/logger.dart';
-import 'package:skype_clone/constants/app_routes.dart';
-import 'package:skype_clone/ui/views/home/home_view.dart';
-import 'package:skype_clone/ui/views/home/tabs/chat_list/search_view.dart';
-import 'package:skype_clone/ui/views/login/login_view.dart';
+import 'package:rogchat/app/logger.dart';
+import 'package:rogchat/constants/app_routes.dart';
+import 'package:rogchat/ui/views/home/home_view.dart';
+import 'package:rogchat/ui/views/home/tabs/chat_list/search_view.dart';
+import 'package:rogchat/ui/views/login/login_view.dart';
 
 class Routes {
   static final logger = getLogger('Router');

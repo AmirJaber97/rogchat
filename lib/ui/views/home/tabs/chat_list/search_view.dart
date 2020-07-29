@@ -2,12 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:skype_clone/app/locator.dart';
-import 'package:skype_clone/constants/app_colors.dart';
-import 'package:skype_clone/models/user.dart';
-import 'package:skype_clone/services/firebase_service.dart';
-import 'package:skype_clone/ui/views/home/tabs/chat_list/components/custom_tile.dart';
-import 'package:skype_clone/ui/views/home/tabs/chat_view.dart';
+import 'package:rogchat/app/locator.dart';
+import 'package:rogchat/constants/app_colors.dart';
+import 'package:rogchat/models/user.dart';
+import 'package:rogchat/services/firebase_service.dart';
+import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_tile.dart';
+import 'package:rogchat/ui/views/home/tabs/chat_view.dart';
 
 class SearchView extends StatefulWidget {
   @override

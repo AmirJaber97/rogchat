@@ -5,25 +5,23 @@ class Message {
   String receiverId;
   String type;
   String message;
-  FieldValue timestamp;
+  Timestamp timestamp;
   String photoUrl;
 
   Message(
       {this.senderId,
-        this.receiverId,
-        this.type,
-        this.message,
-        this.timestamp
-        });
+      this.receiverId,
+      this.type,
+      this.message,
+      this.timestamp});
 
   Message.imageMessage(
       {this.senderId,
-        this.receiverId,
-        this.type,
-        this.message,
-        this.timestamp,
-        this.photoUrl
-      });
+      this.receiverId,
+      this.type,
+      this.message,
+      this.timestamp,
+      this.photoUrl});
 
   Message.fromJson(Map<String, dynamic> json) {
     senderId = json['senderId'];
@@ -31,7 +29,7 @@ class Message {
     type = json['type'];
     message = json['message'];
     timestamp = json['timestamp'];
-//    photoUrl = json['photoUrl'];
+    photoUrl = json['photoUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -42,6 +40,17 @@ class Message {
     data['message'] = this.message;
     data['timestamp'] = this.timestamp;
 //    data['photoUrl'] = this.photoUrl;
+    return data;
+  }
+
+  Map<String, dynamic> toJsonWithImage() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['message'] = this.message;
+    data['senderId'] = this.senderId;
+    data['receiverId'] = this.receiverId;
+    data['type'] = this.type;
+    data['timestamp'] = this.timestamp;
+    data['photoUrl'] = this.photoUrl;
     return data;
   }
 }

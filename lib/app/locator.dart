@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import 'package:skype_clone/caches/preferences.dart';
-import 'package:skype_clone/services/firebase_service.dart';
+import 'package:rogchat/caches/preferences.dart';
+import 'package:rogchat/services/firebase_service.dart';
 
 
 GetIt locator = GetIt.instance;

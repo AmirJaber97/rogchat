@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:skype_clone/enums/notifier_state.dart';
-import 'package:skype_clone/ui/setup/failure_model.dart';
+import 'package:rogchat/enums/notifier_state.dart';
+import 'package:rogchat/ui/setup/failure_model.dart';
 
 extension TaskX<T extends Either<Object, U>, U> on Task<T> {
   Task<Either<Failure, U>> mapLeftToFailure() {

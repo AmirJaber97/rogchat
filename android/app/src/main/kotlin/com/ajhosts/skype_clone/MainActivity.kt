@@ -1,4 +1,4 @@
-package com.ajhosts.skype_clone
+package com.ajhosts.rogchat
 
 import io.flutter.embedding.android.FlutterActivity
 
