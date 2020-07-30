@@ -28,8 +28,9 @@ dependencies:
   cloud_firestore: ^0.13.7
   firebase_auth: ^0.16.1
   firebase_storage: ^3.1.6
+  agora_rtc_engine: ^1.0.8
   google_sign_in: ^4.5.1
-  permission_handler: ^5.0.1+1
+  permission_handler: 3.0.0
   path_provider: ^1.6.11
 
   #widgets

@@ -43,7 +43,7 @@ class _SearchViewState extends State<SearchView> {
       gradient: LinearGradient(colors: [gradientColorStart, gradientColorEnd]),
       leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => Get.back(),
       ),
       elevation: 0,
       bottom: PreferredSize(

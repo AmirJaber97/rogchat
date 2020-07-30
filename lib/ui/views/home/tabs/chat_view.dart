@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:rogchat/constants/app_colors.dart';
@@ -11,10 +12,12 @@ import 'package:rogchat/constants/app_strings.dart';
 import 'package:rogchat/enums/notifier_state.dart';
 import 'package:rogchat/models/message.dart';
 import 'package:rogchat/models/user.dart';
-import 'package:rogchat/providers/imageUploadProvider.dart';
+import 'package:rogchat/providers/image_upload_provider.dart';
 import 'package:rogchat/services/firebase_service.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_app_bar.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_tile.dart';
+import 'package:rogchat/utils/call_utils.dart';
+import 'package:rogchat/utils/permissions.dart';
 import 'package:rogchat/utils/utils.dart';
 
 class ChatView extends StatefulWidget {
@@ -203,7 +206,7 @@ class _ChatViewState extends State<ChatView> {
         fontSize: 16,
       ),
     ) : message.photoUrl != null
-        ? CachedImage(url: message.photoUrl)
+        ? CachedImage(message.photoUrl)
         : Text("Url was null");
   }
 
@@ -252,7 +255,7 @@ class _ChatViewState extends State<ChatView> {
                         child: Icon(
                           Icons.close,
                         ),
-                        onPressed: () => Navigator.maybePop(context),
+                        onPressed: () => navigator.maybePop(),
                       ),
                       Expanded(
                         child: Align(
@@ -447,7 +450,7 @@ class _ChatViewState extends State<ChatView> {
           Icons.arrow_back,
         ),
         onPressed: () {
-          Navigator.pop(context);
+          Get.back();
         },
       ),
       centerTitle: false,
@@ -459,7 +462,14 @@ class _ChatViewState extends State<ChatView> {
           icon: Icon(
             Icons.video_call,
           ),
-          onPressed: () {},
+          onPressed: () async =>
+          await Permissions.cameraAndMicrophonePermissionsGranted()
+              ? CallUtils.dial(
+            from: sender,
+            to: widget.receiver,
+            context: context,
+          )
+              : {},
         ),
         IconButton(
           icon: Icon(
@@ -526,26 +536,46 @@ class ModalTile extends StatelessWidget {
 }
 
 class CachedImage extends StatelessWidget {
-  final String url;
+  final String imageUrl;
+  final bool isRound;
+  final double radius;
+  final double height;
+  final double width;
 
-  CachedImage({
-    @required this.url,
-  });
+  final BoxFit fit;
+
+  final String noImageAvailable =
+      "https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg";
+
+  CachedImage(
+      this.imageUrl, {
+        this.isRound = false,
+        this.radius = 0,
+        this.height,
+        this.width,
+        this.fit = BoxFit.cover,
+      });
 
   @override
   Widget build(BuildContext context) {
-    print("Image url is $url");
-
-    return SizedBox(
-      height: 200,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: CachedNetworkImage(
-          imageUrl: url,
-          placeholder: (context, url) =>
-              Center(child: CircularProgressIndicator()),
-        ),
-      ),
-    );
+    try {
+      return SizedBox(
+        height: isRound ? radius : height,
+        width: isRound ? radius : width,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(isRound ? 50 : radius),
+            child: CachedNetworkImage(
+              imageUrl: imageUrl,
+              fit: fit,
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) =>
+                  Image.network(noImageAvailable, fit: BoxFit.cover),
+            )),
+      );
+    } catch (e) {
+      print(e);
+      return Image.network(noImageAvailable, fit: BoxFit.cover);
+    }
   }
 }

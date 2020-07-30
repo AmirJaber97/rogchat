@@ -7,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rogchat/constants/app_strings.dart';
 import 'package:rogchat/models/message.dart';
 import 'package:rogchat/models/user.dart';
-import 'package:rogchat/providers/imageUploadProvider.dart';
+import 'package:rogchat/providers/image_upload_provider.dart';
 import 'package:rogchat/utils/utils.dart';
 
 class FirebaseService {
@@ -15,6 +15,11 @@ class FirebaseService {
   GoogleSignIn _googleSignIn = GoogleSignIn();
   static final Firestore firestore = Firestore.instance;
   static final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
+  static final CollectionReference _userCollection =
+      _firestore.collection(USERS_COLLECTION);
+
+  static final Firestore _firestore = Firestore.instance;
 
   StorageReference _storageReference;
 
@@ -24,6 +29,15 @@ class FirebaseService {
     FirebaseUser currentUser;
     currentUser = await _auth.currentUser();
     return currentUser;
+  }
+
+  Future<User> getUserDetails() async {
+    FirebaseUser currentUser = await getCurrentUser();
+
+    DocumentSnapshot documentSnapshot =
+        await _userCollection.document(currentUser.uid).get();
+
+    return User.fromJson(documentSnapshot.data);
   }
 
   Future<List<User>> fetchAllUsers(FirebaseUser currentUser) async {
@@ -114,7 +128,7 @@ class FirebaseService {
           .ref()
           .child('${DateTime.now().millisecondsSinceEpoch}');
       StorageUploadTask storageUploadTask =
-      _storageReference.putFile(imageFile);
+          _storageReference.putFile(imageFile);
       var url = await (await storageUploadTask.onComplete).ref.getDownloadURL();
       // print(url);
       return url;
@@ -164,5 +178,4 @@ class FirebaseService {
 
     setImageMsg(url, receiverId, senderId);
   }
-
 }

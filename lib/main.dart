@@ -8,7 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:rogchat/app/locator.dart';
 import 'package:rogchat/caches/preferences.dart';
 import 'package:rogchat/enums/notifier_state.dart';
-import 'package:rogchat/providers/imageUploadProvider.dart';
+import 'package:rogchat/providers/image_upload_provider.dart';
+import 'package:rogchat/providers/user_provider.dart';
 import 'package:rogchat/ui/setup/routes.dart';
 import 'package:rogchat/ui/views/home/home_view.dart';
 import 'package:rogchat/ui/views/login/login_view.dart';
@@ -43,6 +44,9 @@ class _RogChatState extends State<RogChat> {
         ),
         ChangeNotifierProvider<ImageUploadProvider>(
           create: (context) => ImageUploadProvider(),
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(),
         ),
       ],
       child: GetMaterialApp(
