@@ -26,7 +26,7 @@ class User {
     profilePhoto = json['profilePhoto'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(User user) {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['uid'] = this.uid;
     data['name'] = this.name;

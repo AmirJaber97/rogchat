@@ -4,7 +4,7 @@ import 'package:rogchat/models/call.dart';
 
 class CallService {
   final CollectionReference callCollection =
-  Firestore.instance.collection(CALL_COLLECTION);
+      Firestore.instance.collection(CALL_COLLECTION);
 
   Stream<DocumentSnapshot> callStream({String uid}) =>
       callCollection.document(uid).snapshots();

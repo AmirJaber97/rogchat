@@ -5,7 +5,7 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:rogchat/app/locator.dart';
 import 'package:rogchat/constants/app_colors.dart';
 import 'package:rogchat/models/user.dart';
-import 'package:rogchat/services/firebase_service.dart';
+import 'package:rogchat/services/auth_service.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_tile.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_view.dart';
 
@@ -15,24 +15,21 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
-  FirebaseService _firebaseService = locator<FirebaseService>();
+  AuthService _authService = locator<AuthService>();
 
   List<User> userList;
   String query = "";
   TextEditingController searchController = TextEditingController();
-
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    _firebaseService.getCurrentUser().then((FirebaseUser user) {
-      print("My user id : ${user.uid}");
-      _firebaseService.fetchAllUsers(user).then((List<User> list) {
+    _authService.getCurrentUser().then((FirebaseUser user) {
+      _authService.fetchAllUsers(user).then((List<User> list) {
         setState(() {
           userList = list;
-          print(userList[0].name);
         });
       });
     });
@@ -89,18 +86,20 @@ class _SearchViewState extends State<SearchView> {
   buildSuggestions(String query) {
     final List<User> suggestionList = query.isEmpty
         ? []
-        : userList.where((User user) {
-      String _getUsername = user.username.toLowerCase();
-      String _query = query.toLowerCase();
-      String _getName = user.name.toLowerCase();
-      bool matchesUsername = _getUsername.contains(_query);
-      bool matchesName = _getName.contains(_query);
+        : userList != null
+            ? userList.where((User user) {
+                String _getUsername = user.username.toLowerCase();
+                String _query = query.toLowerCase();
+                String _getName = user.name.toLowerCase();
+                bool matchesUsername = _getUsername.contains(_query);
+                bool matchesName = _getName.contains(_query);
 
-      return (matchesUsername || matchesName);
+                return (matchesUsername || matchesName);
 
-      // (User user) => (user.username.toLowerCase().contains(query.toLowerCase()) ||
-      //     (user.name.toLowerCase().contains(query.toLowerCase()))),
-    }).toList();
+                // (User user) => (user.username.toLowerCase().contains(query.toLowerCase()) ||
+                //     (user.name.toLowerCase().contains(query.toLowerCase()))),
+              }).toList()
+            : [];
 
     return ListView.builder(
       itemCount: suggestionList.length,
@@ -114,7 +113,9 @@ class _SearchViewState extends State<SearchView> {
         return CustomTile(
           mini: false,
           onTap: () {
-            Get.to(ChatView(receiver: searchedUser,));
+            Get.to(ChatView(
+              receiver: searchedUser,
+            ));
           },
           leading: CircleAvatar(
             backgroundImage: NetworkImage(searchedUser.profilePhoto),
@@ -135,7 +136,6 @@ class _SearchViewState extends State<SearchView> {
       }),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

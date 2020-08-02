@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rogchat/constants/app_routes.dart';
+import 'package:rogchat/services/auth_service.dart';
+import 'package:rogchat/ui/views/home/tabs/call_views/pickup/pickup_layout.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_app_bar.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_tile.dart';
 
 import '../../../../../app/locator.dart';
 import '../../../../../constants/app_colors.dart';
-import '../../../../../services/firebase_service.dart';
 import '../../../../../utils/utils.dart';
 
 class ChatListView extends StatefulWidget {
@@ -14,16 +15,16 @@ class ChatListView extends StatefulWidget {
   _ChatListViewState createState() => _ChatListViewState();
 }
 
-final FirebaseService _firebaseService = locator<FirebaseService>();
+final AuthService _authService = locator<AuthService>();
 
 class _ChatListViewState extends State<ChatListView> {
   String currentUserId;
-  String initials;
+  String initials = "";
 
   @override
   void initState() {
     super.initState();
-    _firebaseService.getCurrentUser().then((user) {
+    _authService.getCurrentUser().then((user) {
       setState(() {
         currentUserId = user.uid;
         initials = Utils.getInitials(user.displayName);
@@ -58,11 +59,13 @@ class _ChatListViewState extends State<ChatListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: kBlackColor,
-        appBar: customAppBar(context),
-        floatingActionButton: NewChatButton(),
-        body: ChatListContainer(currentUserId));
+    return PickupLayout(
+      scaffold: Scaffold(
+          backgroundColor: kBlackColor,
+          appBar: customAppBar(context),
+          floatingActionButton: NewChatButton(),
+          body: ChatListContainer(currentUserId)),
+    );
   }
 }
 

@@ -20,26 +20,26 @@ class Call {
   });
 
   Map<String, dynamic> toJson(Call call) {
-    Map<String, dynamic> callMap = Map();
-    callMap["caller_id"] = call.callerId;
-    callMap["caller_name"] = call.callerName;
-    callMap["caller_pic"] = call.callerPic;
-    callMap["receiver_id"] = call.receiverId;
-    callMap["receiver_name"] = call.receiverName;
-    callMap["receiver_pic"] = call.receiverPic;
-    callMap["channel_id"] = call.channelId;
-    callMap["has_dialled"] = call.hasDialled;
-    return callMap;
+    Map<String, dynamic> data = Map();
+    data["caller_id"] = call.callerId;
+    data["caller_name"] = call.callerName;
+    data["caller_pic"] = call.callerPic;
+    data["receiver_id"] = call.receiverId;
+    data["receiver_name"] = call.receiverName;
+    data["receiver_pic"] = call.receiverPic;
+    data["channel_id"] = call.channelId;
+    data["has_dialled"] = call.hasDialled;
+    return data;
   }
 
-  Call.fromJson(Map callMap) {
-    this.callerId = callMap["caller_id"];
-    this.callerName = callMap["caller_name"];
-    this.callerPic = callMap["caller_pic"];
-    this.receiverId = callMap["receiver_id"];
-    this.receiverName = callMap["receiver_name"];
-    this.receiverPic = callMap["receiver_pic"];
-    this.channelId = callMap["channel_id"];
-    this.hasDialled = callMap["has_dialled"];
+  Call.fromJson(Map<String, dynamic> json) {
+    this.callerId = json["caller_id"];
+    this.callerName = json["caller_name"];
+    this.callerPic = json["caller_pic"];
+    this.receiverId = json["receiver_id"];
+    this.receiverName = json["receiver_name"];
+    this.receiverPic = json["receiver_pic"];
+    this.channelId = json["channel_id"];
+    this.hasDialled = json["has_dialled"];
   }
 }

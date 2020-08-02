@@ -39,7 +39,6 @@ class Message {
     data['type'] = this.type;
     data['message'] = this.message;
     data['timestamp'] = this.timestamp;
-//    data['photoUrl'] = this.photoUrl;
     return data;
   }
 

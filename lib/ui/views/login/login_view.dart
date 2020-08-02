@@ -2,11 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:rogchat/app/locator.dart';
 import 'package:rogchat/constants/app_colors.dart';
 import 'package:rogchat/constants/app_routes.dart';
 import 'package:rogchat/enums/notifier_state.dart';
+import 'package:rogchat/services/push_notifications_service.dart';
 import 'package:rogchat/ui/views/login/login_viewmodel.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -14,22 +16,12 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  bool isLoginPressed = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: kBlackColor,
-        body: Stack(
-          children: <Widget>[
-            Center(child: loginButton()),
-            isLoginPressed
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Container()
-          ],
-        ));
+        body: Center(child: loginButton()));
   }
 
   Widget loginButton() {
@@ -66,7 +58,6 @@ class _LoginViewState extends State<LoginView> {
   void authenticateUser(LoginViewModel model, FirebaseUser user) {
     model.authenticateUser(user).then((isNewUser) {
       if (isNewUser) {
-
         model.register(user).then((value) {
           Get.offAndToNamed(RoutePaths.Home);
         });

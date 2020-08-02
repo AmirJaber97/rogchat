@@ -7,13 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:rogchat/app/locator.dart';
 import 'package:rogchat/constants/app_colors.dart';
 import 'package:rogchat/constants/app_strings.dart';
 import 'package:rogchat/enums/notifier_state.dart';
 import 'package:rogchat/models/message.dart';
 import 'package:rogchat/models/user.dart';
 import 'package:rogchat/providers/image_upload_provider.dart';
-import 'package:rogchat/services/firebase_service.dart';
+import 'package:rogchat/services/auth_service.dart';
+import 'package:rogchat/services/chat_service.dart';
+import 'package:rogchat/services/storage_service.dart';
+import 'package:rogchat/ui/views/home/tabs/call_views/pickup/pickup_layout.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_app_bar.dart';
 import 'package:rogchat/ui/views/home/tabs/chat_list/components/custom_tile.dart';
 import 'package:rogchat/utils/call_utils.dart';
@@ -30,17 +34,19 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  FirebaseService _firebaseService = FirebaseService();
-
   TextEditingController textFieldController = TextEditingController();
+
+  FocusNode textFieldFocus = FocusNode();
+
+  final StorageService _storageService = locator<StorageService>();
+  final ChatService _chatService = locator<ChatService>();
+  final AuthService _authService = locator<AuthService>();
 
   ScrollController _listScrollController = ScrollController();
 
   User sender;
 
   String _currentUserId;
-
-  FocusNode textFieldFocus = FocusNode();
 
   bool isWriting = false;
 
@@ -52,7 +58,7 @@ class _ChatViewState extends State<ChatView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _firebaseService.getCurrentUser().then((user) {
+    _authService.getCurrentUser().then((user) {
       _currentUserId = user.uid;
 
       setState(() {
@@ -85,28 +91,30 @@ class _ChatViewState extends State<ChatView> {
   Widget build(BuildContext context) {
     _imageUploadProvider = Provider.of<ImageUploadProvider>(context);
 
-    return Scaffold(
-      backgroundColor: kBlackColor,
-      appBar: customAppBar(context),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: messageList(),
-          ),
-          _imageUploadProvider.state == NotifierState.Loading
-              ? Container(
-                  alignment: Alignment.centerRight,
-                  margin: EdgeInsets.only(right: 15.0),
-                  child: CircularProgressIndicator(),
-                )
-              : Container(),
-          chatControls(),
-          showEmojiPicker
-              ? Container(
-                  child: emojiContainer(),
-                )
-              : Container()
-        ],
+    return PickupLayout(
+      scaffold: Scaffold(
+        backgroundColor: kBlackColor,
+        appBar: customAppBar(context),
+        body: Column(
+          children: <Widget>[
+            Flexible(
+              child: messageList(),
+            ),
+            _imageUploadProvider.state == NotifierState.Loading
+                ? Container(
+                    alignment: Alignment.centerRight,
+                    margin: EdgeInsets.only(right: 15.0),
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(),
+            chatControls(),
+            showEmojiPicker
+                ? Container(
+                    child: emojiContainer(),
+                  )
+                : Container()
+          ],
+        ),
       ),
     );
   }
@@ -129,7 +137,7 @@ class _ChatViewState extends State<ChatView> {
   Widget messageList() {
     return StreamBuilder(
       stream: Firestore.instance
-          .collection(MESSAGE_COLLECTION)
+          .collection(MESSAGES_COLLECTION)
           .document(_currentUserId)
           .collection(widget.receiver.uid)
           .orderBy(TIMESTAMP_FIELD, descending: true)
@@ -197,17 +205,22 @@ class _ChatViewState extends State<ChatView> {
   }
 
   getMessage(Message message) {
-    return message.type != MESSAGE_TYPE_IMAGE ? 
-    
-    Text(
-      message.message ?? '',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 16,
-      ),
-    ) : message.photoUrl != null
-        ? CachedImage(message.photoUrl)
-        : Text("Url was null");
+    return message.type != MESSAGE_TYPE_IMAGE
+        ? Text(
+            message.message ?? '',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          )
+        : message.photoUrl != null
+            ? CachedImage(
+                message.photoUrl,
+                height: 250,
+                width: 250,
+                radius: 10,
+              )
+            : Text("Url was null");
   }
 
   Widget receiverLayout(Message message) {
@@ -249,27 +262,11 @@ class _ChatViewState extends State<ChatView> {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Row(
-                    children: <Widget>[
-                      FlatButton(
-                        child: Icon(
-                          Icons.close,
-                        ),
-                        onPressed: () => navigator.maybePop(),
-                      ),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Content and tools",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: FlatButton(
+                    child: Icon(
+                      Icons.close,
+                    ),
+                    onPressed: () => navigator.maybePop(),
                   ),
                 ),
                 Flexible(
@@ -279,28 +276,9 @@ class _ChatViewState extends State<ChatView> {
                         title: "Media",
                         subtitle: "Share Photos and Video",
                         icon: Icons.image,
-                        onTap:() => Utils.pickImage(source: ImageSource.gallery),
+                        onTap: () =>
+                            Utils.pickImage(source: ImageSource.gallery),
                       ),
-                      ModalTile(
-                          title: "File",
-                          subtitle: "Share files",
-                          icon: Icons.tab),
-                      ModalTile(
-                          title: "Contact",
-                          subtitle: "Share contacts",
-                          icon: Icons.contacts),
-                      ModalTile(
-                          title: "Location",
-                          subtitle: "Share a location",
-                          icon: Icons.add_location),
-                      ModalTile(
-                          title: "Schedule Call",
-                          subtitle: "Arrange a call and get reminders",
-                          icon: Icons.schedule),
-                      ModalTile(
-                          title: "Create Poll",
-                          subtitle: "Share polls",
-                          icon: Icons.poll)
                     ],
                   ),
                 ),
@@ -309,14 +287,24 @@ class _ChatViewState extends State<ChatView> {
           });
     }
 
-    pickImage({@required ImageSource source}) async {
-      File selectedImage = await Utils.pickImage(source: source);
-      _firebaseService.uploadImage(
-        selectedImage,
-        widget.receiver.uid,
-        _currentUserId,
-        _imageUploadProvider,
+    sendMessage() {
+      var text = textFieldController.text;
+
+      Message _message = Message(
+        receiverId: widget.receiver.uid,
+        senderId: sender.uid,
+        message: text,
+        timestamp: Timestamp.now(),
+        type: 'text',
       );
+
+      setState(() {
+        isWriting = false;
+      });
+
+      textFieldController.text = "";
+
+      _chatService.sendMessage(_message, sender, widget.receiver);
     }
 
     return Container(
@@ -425,22 +413,14 @@ class _ChatViewState extends State<ChatView> {
     );
   }
 
-  sendMessage() {
-    var text = textFieldController.text;
-
-    Message _message = Message(
+  pickImage({@required ImageSource source}) async {
+    File selectedImage = await Utils.pickImage(source: source);
+    _storageService.uploadImage(
+      image: selectedImage,
+      senderId: _currentUserId,
       receiverId: widget.receiver.uid,
-      senderId: sender.uid,
-      message: text,
-      timestamp: Timestamp.now(),
-      type: 'text',
+      imageUploadProvider: _imageUploadProvider,
     );
-
-    setState(() {
-      isWriting = false;
-    });
-
-    _firebaseService.sendMessage(_message, sender, widget.receiver);
   }
 
   CustomAppBar customAppBar(context) {
@@ -463,13 +443,13 @@ class _ChatViewState extends State<ChatView> {
             Icons.video_call,
           ),
           onPressed: () async =>
-          await Permissions.cameraAndMicrophonePermissionsGranted()
-              ? CallUtils.dial(
-            from: sender,
-            to: widget.receiver,
-            context: context,
-          )
-              : {},
+              await Permissions.cameraAndMicrophonePermissionsGranted()
+                  ? CallUtils.dial(
+                      from: sender,
+                      to: widget.receiver,
+                      context: context,
+                    )
+                  : {},
         ),
         IconButton(
           icon: Icon(
@@ -548,13 +528,13 @@ class CachedImage extends StatelessWidget {
       "https://www.esm.rochester.edu/uploads/NoPhotoAvailable.jpg";
 
   CachedImage(
-      this.imageUrl, {
-        this.isRound = false,
-        this.radius = 0,
-        this.height,
-        this.width,
-        this.fit = BoxFit.cover,
-      });
+    this.imageUrl, {
+    this.isRound = false,
+    this.radius = 0,
+    this.height,
+    this.width,
+    this.fit = BoxFit.cover,
+  });
 
   @override
   Widget build(BuildContext context) {

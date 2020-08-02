@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:rogchat/app/locator.dart';
 import 'package:rogchat/models/call.dart';
 import 'package:rogchat/models/user.dart';
@@ -27,9 +26,11 @@ class CallUtils {
     call.hasDialled = true;
 
     if (callMade) {
-      navigator.push(MaterialPageRoute(
-        builder: (context) => CallView(call: call),
-      ));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CallView(call: call),
+          ));
     }
   }
 }
